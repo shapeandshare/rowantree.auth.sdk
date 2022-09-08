@@ -1,3 +1,5 @@
+""" Claim Utilities """
+
 import logging
 from typing import Optional
 
@@ -5,29 +7,47 @@ from jose import JWTError, jwt
 from starlette import status
 from starlette.exceptions import HTTPException
 
-from ..config.auth import AuthConfig
-from ..contracts.dto.token_claims import TokenClaims
+from rowantree.common.sdk import demand_env_var
 
-# Generating auth configuration
-auth_config: AuthConfig = AuthConfig()
+from ..contracts.dto.token_claims import TokenClaims
 
 
 def get_claims(token: str) -> TokenClaims:
+    """
+    Gets claims from an OAuth2 token.
+
+    Parameters
+    ----------
+    token: str
+        Encoded token.
+
+    Returns
+    -------
+    claims: TokenClaims
+        An instance of TokenClaims, otherwise an HTTPException exception.
+    """
+
     credentials_exception: HTTPException = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
     try:
+        issuer: str = demand_env_var(name="ACCESS_TOKEN_ISSUER")
+
         payload: dict = jwt.decode(
-            token, auth_config.secret_key, algorithms=[auth_config.algorithm], issuer=auth_config.issuer
+            token,
+            demand_env_var(name="ACCESS_TOKEN_SECRET_KEY"),
+            algorithms=[demand_env_var(name="ACCESS_TOKEN_ALGORITHM")],
+            issuer=issuer,
         )
-        issuer: Optional[str] = payload.get("iss")
+        token_issuer: Optional[str] = payload.get("iss")
         guid: Optional[str] = payload.get("sub")
-        if issuer != auth_config.issuer or guid is None:
-            logging.debug(f"Received issuer: {issuer}, expected: {auth_config.issuer}, guid was: {guid}")
+        if token_issuer != issuer or guid is None:
+            logging.debug("Received issuer: %s, expected: %s, guid was: %s", token_issuer, issuer, guid)
             raise credentials_exception
         logging.debug(payload)
         return TokenClaims(**payload)
     except JWTError:
-        raise credentials_exception
+        raise credentials_exception from JWTError
