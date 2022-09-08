@@ -16,6 +16,7 @@ class AuthConfig(BaseModel):
     algorithm: Optional[str]
     issuer: Optional[str]
     auth_endpoint: Optional[str]
+    timeout: Optional[float]
 
     def __init__(self, *args, config_file_path: str = "rowantree.config", **kwargs):
         super().__init__(**kwargs)
@@ -27,6 +28,7 @@ class AuthConfig(BaseModel):
         self.algorithm = config.get("SERVER", "algorithm")
         self.issuer = config.get("SERVER", "issuer")
         self.auth_endpoint = config.get("SERVER", "auth_endpoint")
+        self.timeout = config.getfloat("SERVER", "timeout")
 
         if "ACCESS_TOKEN_SECRET_KEY" in os.environ:
             self.secret_key = os.environ["SECRET_KEY"]
@@ -39,3 +41,6 @@ class AuthConfig(BaseModel):
 
         if "ACCESS_AUTH_ENDPOINT" in os.environ:
             self.auth_endpoint = os.environ["ACCESS_AUTH_ENDPOINT"]
+
+        if "ROWANTREE_AUTH_TIMEOUT" in os.environ:
+            self.timeout = float(os.environ["ROWANTREE_AUTH_TIMEOUT"])

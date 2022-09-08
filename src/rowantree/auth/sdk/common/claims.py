@@ -27,6 +27,7 @@ def get_claims(token: str) -> TokenClaims:
         if issuer != auth_config.issuer or guid is None:
             logging.debug(f"Received issuer: {issuer}, expected: {auth_config.issuer}, guid was: {guid}")
             raise credentials_exception
+        logging.debug(payload)
         return TokenClaims(**payload)
     except JWTError:
         raise credentials_exception

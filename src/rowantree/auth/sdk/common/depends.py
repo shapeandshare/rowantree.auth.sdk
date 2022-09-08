@@ -23,6 +23,6 @@ async def is_enabled(token_claims: TokenClaims = Depends(get_current_user)) -> T
 
 
 async def is_admin(token_claims: TokenClaims = Depends(is_enabled)) -> TokenClaims:
-    if token_claims.admin:
+    if not token_claims.admin:
         raise HTTPException(status_code=400, detail="Insufficient Permissions")
     return token_claims
