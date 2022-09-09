@@ -1,15 +1,14 @@
 """ Action Queue Process Command Definition """
 
-import json
-import logging
+from starlette import status
 
-import requests
-from requests import Response
-
-from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var
 
 from ..contracts.dto.authenticate_user_request import AuthenticateUserRequest
+from ..contracts.dto.request_status_codes import RequestStatusCodes
 from ..contracts.dto.token import Token
+from ..contracts.dto.wrapped_request import WrappedRequest
+from ..contracts.request_verb import RequestVerb
 from .abstract_command import AbstractCommand
 
 
@@ -32,13 +31,11 @@ class AuthenticateUserCommand(AbstractCommand):
         request: AuthenticateUserRequest
         """
 
-        request_dict: dict = {
-            "url": f"{demand_env_var(name='ACCESS_AUTH_ENDPOINT')}/v1/auth/token",
-            "data": request.dict(by_alias=True),
-            "headers": self.headers,
-            "timeout": demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_TIMEOUT"),
-        }
-        logging.debug(json.dumps(request_dict))
-        response: Response = requests.post(**request_dict)
-
-        return Token.parse_obj(response.json())
+        request: WrappedRequest = WrappedRequest(
+            verb=RequestVerb.POST,
+            url=f"{demand_env_var(name='ACCESS_AUTH_ENDPOINT')}/v1/auth/token",
+            statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
+            data=request.dict(),
+        )
+        response: dict = self.wrapped_request(request=request)
+        return Token.parse_obj(response)
