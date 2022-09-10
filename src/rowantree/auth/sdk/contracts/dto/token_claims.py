@@ -26,5 +26,7 @@ class TokenClaims(BaseModel):
     sub: str
     iss: str
     exp: datetime
+
+    # TOO: move to scopes
     disabled: bool
     admin: bool

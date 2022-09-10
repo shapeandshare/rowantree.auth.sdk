@@ -1,6 +1,6 @@
 """ Auth Service User Base Definition """
 
-from typing import Union
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -24,7 +24,7 @@ class UserBase(BaseModel):
     """
 
     username: str
-    guid: str
-    email: Union[str, None] = None
-    disabled: Union[bool, None] = None
-    admin: Union[bool, None] = None
+    guid: Optional[str] = None
+    email: Optional[str] = None
+    disabled: Optional[bool] = None
+    admin: Optional[bool] = None
