@@ -1,7 +1,5 @@
 """ Auth Service Register User Base Definition """
 
-from typing import Union
-
 from pydantic import BaseModel
 
 

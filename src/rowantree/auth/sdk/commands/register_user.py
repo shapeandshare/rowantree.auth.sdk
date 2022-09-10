@@ -8,8 +8,8 @@ from ..contracts.dto.request_status_codes import RequestStatusCodes
 from ..contracts.dto.token import Token
 from ..contracts.dto.wrapped_request import WrappedRequest
 from ..contracts.request_verb import RequestVerb
-from .abstract_command import AbstractCommand
 from ..contracts.requests.register_user_request import RegisterUserRequest
+from .abstract_command import AbstractCommand
 
 
 class RegisterUserCommand(AbstractCommand):
