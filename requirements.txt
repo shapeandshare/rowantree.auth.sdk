@@ -3,4 +3,9 @@ requests~=2.28
 python-jose~=3.3
 fastapi~=0.81
 starlette~=0.19
+python-jose~=3.3
+# passlib[bcrypt]
+bcrypt~=4.0
+passlib~=1.7
+
 rowantree.common.sdk~=0.1
