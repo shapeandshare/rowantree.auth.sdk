@@ -6,7 +6,7 @@ from jose import jwt
 
 from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 
-from .. import Token
+from ..contracts.dto.token import Token
 from ..contracts.dto.user.user import User
 
 
