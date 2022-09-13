@@ -13,10 +13,10 @@ class RegisterUserRequest(BaseModel):
         The username of the user.
     email: Union[str, None] = None
         The user email address.
-    hashed_password: str
-        Hashed user password.
+    password: str
+        user password.
     """
 
     username: str
     email: str
-    hashed_password: str
+    password: str
