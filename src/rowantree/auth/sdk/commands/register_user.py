@@ -4,8 +4,8 @@ from starlette import status
 
 from rowantree.common.sdk import demand_env_var
 
+from .. import UserBase
 from ..contracts.dto.request_status_codes import RequestStatusCodes
-from ..contracts.dto.token import Token
 from ..contracts.dto.wrapped_request import WrappedRequest
 from ..contracts.request_verb import RequestVerb
 from ..contracts.requests.register_user_request import RegisterUserRequest
@@ -22,7 +22,7 @@ class RegisterUserCommand(AbstractCommand):
         Register User
     """
 
-    def execute(self, request: RegisterUserRequest) -> Token:
+    def execute(self, request: RegisterUserRequest) -> UserBase:
         """
         Register User
 
@@ -38,4 +38,4 @@ class RegisterUserCommand(AbstractCommand):
             data=request.dict(),
         )
         response: dict = self.wrapped_request(request=request)
-        return Token.parse_obj(response)
+        return UserBase.parse_obj(response)
