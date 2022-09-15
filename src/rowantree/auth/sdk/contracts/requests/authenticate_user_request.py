@@ -1,5 +1,5 @@
 """ Authenticate User Request Definition """
-from rowantree.common.sdk import BaseModel
+from rowantree.contracts import BaseModel
 
 
 class AuthenticateUserRequest(BaseModel):

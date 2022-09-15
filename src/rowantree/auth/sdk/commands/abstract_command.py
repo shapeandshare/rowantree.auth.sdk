@@ -8,7 +8,8 @@ from typing import Any, Optional
 import requests
 from requests import Response
 
-from rowantree.common.sdk import BaseModel, demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var_as_float
+from rowantree.contracts import BaseModel
 
 from ..contracts.dto.wrapped_request import WrappedRequest
 from ..contracts.exceeded_retry_count_error import ExceededRetryCountError

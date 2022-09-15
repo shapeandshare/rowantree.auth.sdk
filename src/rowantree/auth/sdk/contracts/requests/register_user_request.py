@@ -1,5 +1,5 @@
 """ Auth Service Register User Base Definition """
-from rowantree.common.sdk import BaseModel
+from rowantree.contracts import BaseModel
 
 
 class RegisterUserRequest(BaseModel):
