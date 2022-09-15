@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from rowantree.common.sdk import BaseModel
+from rowantree.contracts import BaseModel
 
 
 class UserBase(BaseModel):
