@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class UserBase(BaseModel):

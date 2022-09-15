@@ -1,6 +1,5 @@
 """ Authenticate User Request Definition """
-
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class AuthenticateUserRequest(BaseModel):

@@ -1,6 +1,5 @@
 """ Token Definition """
-
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class Token(BaseModel):
