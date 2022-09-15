@@ -35,7 +35,7 @@ class RegisterUserCommand(AbstractCommand):
             verb=RequestVerb.POST,
             url=f"{demand_env_var(name='ACCESS_AUTH_ENDPOINT')}/v1/auth/register",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[], retry=[]),
-            data=request.dict(),
+            data=request.dict(by_alias=True),
         )
         response: dict = self.wrapped_request(request=request)
         return UserBase.parse_obj(response)

@@ -1,6 +1,5 @@
 """ Auth Service Register User Base Definition """
-
-from pydantic import BaseModel
+from rowantree.common.sdk import BaseModel
 
 
 class RegisterUserRequest(BaseModel):

@@ -6,10 +6,9 @@ from abc import abstractmethod
 from typing import Any, Optional
 
 import requests
-from pydantic import BaseModel
 from requests import Response
 
-from rowantree.common.sdk import demand_env_var_as_float
+from rowantree.common.sdk import BaseModel, demand_env_var_as_float
 
 from ..contracts.dto.wrapped_request import WrappedRequest
 from ..contracts.exceeded_retry_count_error import ExceededRetryCountError
@@ -73,7 +72,7 @@ class AbstractCommand(BaseModel):
         """
 
         if depth < 1:
-            raise ExceededRetryCountError(json.dumps({"request": request.dict(), "depth": depth}))
+            raise ExceededRetryCountError(json.dumps({"request": request.dict(by_alias=True), "depth": depth}))
         depth -= 1
 
         params: dict = AbstractCommand._build_requests_params(request=request)
@@ -104,7 +103,7 @@ class AbstractCommand(BaseModel):
             return self._api_caller(request=request, depth=depth)
 
         raise RequestFailureError(
-            json.dumps({"status_code": response.status_code, "request": request.dict(), "depth": depth})
+            json.dumps({"status_code": response.status_code, "request": request.dict(by_alias=True), "depth": depth})
         )
 
     def wrapped_request(self, request: WrappedRequest) -> dict:
