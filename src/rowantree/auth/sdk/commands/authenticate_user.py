@@ -31,7 +31,7 @@ class AuthenticateUserCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"https://{self.options.tld}/auth/v1/token",
+            url=f"https://api.{self.options.tld}/auth/v1/token",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[status.HTTP_401_UNAUTHORIZED], retry=[]),
             data=request.dict(by_alias=True),
         )
