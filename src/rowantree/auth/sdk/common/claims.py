@@ -34,11 +34,11 @@ def get_claims(token: str) -> TokenClaims:
     )
 
     try:
-        issuer: str = demand_env_var(name="ACCESS_TOKEN_ISSUER")
+        issuer: str = get_issuer()
 
         payload: dict = jwt.decode(
-            token,
-            demand_env_var(name="ACCESS_TOKEN_SECRET_KEY"),
+            token=token,
+            key=demand_env_var(name="ACCESS_TOKEN_SECRET_KEY"),
             algorithms=[demand_env_var(name="ACCESS_TOKEN_ALGORITHM")],
             issuer=issuer,
         )
@@ -51,3 +51,16 @@ def get_claims(token: str) -> TokenClaims:
         return TokenClaims(**payload)
     except JWTError:
         raise credentials_exception from JWTError
+
+
+def get_issuer() -> str:
+    """
+    Builds issuer string
+
+    Returns
+    -------
+    issuer: str
+        The issuer for the domain.
+    """
+
+    return f"https://{demand_env_var(name='ROWANTREE_TLD')}/auth"

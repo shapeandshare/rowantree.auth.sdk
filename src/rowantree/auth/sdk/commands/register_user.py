@@ -2,8 +2,6 @@
 
 from starlette import status
 
-from rowantree.common.sdk import demand_env_var
-
 from ..contracts.dto.request_status_codes import RequestStatusCodes
 from ..contracts.dto.user.base import UserBase
 from ..contracts.dto.wrapped_request import WrappedRequest
@@ -33,7 +31,7 @@ class RegisterUserCommand(AbstractCommand):
 
         request: WrappedRequest = WrappedRequest(
             verb=RequestVerb.POST,
-            url=f"{demand_env_var(name='ACCESS_AUTH_ENDPOINT')}/v1/auth/register",
+            url=f"https://{self.options.tld}/auth/v1/register",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[], retry=[]),
             data=request.dict(by_alias=True),
         )
