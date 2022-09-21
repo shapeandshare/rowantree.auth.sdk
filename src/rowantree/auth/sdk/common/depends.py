@@ -4,12 +4,10 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from starlette.exceptions import HTTPException
 
-from rowantree.common.sdk import demand_env_var
-
 from ..contracts.dto.token_claims import TokenClaims
-from .claims import get_claims
+from .claims import get_claims, get_issuer
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{demand_env_var(name='ACCESS_AUTH_ENDPOINT')}/v1/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=get_issuer())
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> TokenClaims:

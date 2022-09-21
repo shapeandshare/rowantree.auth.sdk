@@ -8,6 +8,7 @@ from rowantree.common.sdk import demand_env_var, demand_env_var_as_float
 
 from ..contracts.dto.token import Token
 from ..contracts.dto.user.user import User
+from .claims import get_issuer
 
 
 def create_user_access_token(user: User) -> Token:
@@ -49,7 +50,7 @@ def create_access_token(data: dict) -> Token:
     expire: datetime = datetime.utcnow() + timedelta(
         minutes=demand_env_var_as_float(name="ACCESS_TOKEN_EXPIRATION_TIME")
     )
-    to_encode.update({"iss": demand_env_var(name="ACCESS_TOKEN_ISSUER"), "exp": expire})
+    to_encode.update({"iss": get_issuer(), "exp": expire})
     encoded_jwt: str = jwt.encode(
         to_encode,
         demand_env_var(name="ACCESS_TOKEN_SECRET_KEY"),

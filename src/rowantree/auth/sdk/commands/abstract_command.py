@@ -8,9 +8,10 @@ from typing import Any, Optional
 import requests
 from requests import Response
 
-from rowantree.common.sdk import demand_env_var_as_float
+from rowantree.common.sdk import demand_env_var, demand_env_var_as_float, demand_env_var_as_int
 from rowantree.contracts import BaseModel
 
+from ..contracts.dto.command_options import CommandOptions
 from ..contracts.dto.wrapped_request import WrappedRequest
 from ..contracts.exceeded_retry_count_error import ExceededRetryCountError
 from ..contracts.request_failure_error import RequestFailureError
@@ -22,15 +23,25 @@ class AbstractCommand(BaseModel):
     Abstract Command
     """
 
-    sleep_time: float = 1
-    retry_count: int = 5
+    options: CommandOptions
+
+    def __init__(self, options: Optional[CommandOptions], *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if options:
+            self.options = options
+        else:
+            self.options = CommandOptions(
+                sleep_time=demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_SLEEP_TIME"),
+                retry_count=demand_env_var_as_int(name="ACCESS_AUTH_ENDPOINT_RETRY_COUNT"),
+                tld=demand_env_var(name="ROWANTREE_TLD"),
+                timeout=demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_TIMEOUT"),
+            )
 
     @abstractmethod
     def execute(self, *args, **kwargs) -> Optional[Any]:
         """Command entry point"""
 
-    @staticmethod
-    def _build_requests_params(request: WrappedRequest) -> dict:
+    def _build_requests_params(self, request: WrappedRequest) -> dict:
         """
         Builds the `requests` call parameters.
 
@@ -47,7 +58,7 @@ class AbstractCommand(BaseModel):
 
         params: dict = {
             "url": request.url,
-            "timeout": demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_TIMEOUT"),
+            "timeout": self.options.timeout,
         }
         if request.verb == RequestVerb.POST:
             params["data"] = request.data
@@ -76,7 +87,7 @@ class AbstractCommand(BaseModel):
             raise ExceededRetryCountError(json.dumps({"request": request.dict(by_alias=True), "depth": depth}))
         depth -= 1
 
-        params: dict = AbstractCommand._build_requests_params(request=request)
+        params: dict = self._build_requests_params(request=request)
         # pylint: disable=broad-except
         try:
             if request.verb == RequestVerb.GET:
@@ -89,18 +100,18 @@ class AbstractCommand(BaseModel):
                 raise Exception("Unknown Verb")
         except requests.exceptions.ConnectionError as error:
             logging.debug("Connection Error (%s) - Retrying.. %i", str(error), depth)
-            time.sleep(self.sleep_time)
+            time.sleep(self.options.sleep_time)
             return self._api_caller(request=request, depth=depth)
         except Exception as error:
             logging.debug("Exception needed to cover: %s", str(error))
-            time.sleep(self.sleep_time)
+            time.sleep(self.options.sleep_time)
             return self._api_caller(request=request, depth=depth)
 
         if response.status_code in request.statuses.allow:
             return response.json()
 
         if response.status_code in request.statuses.retry:
-            time.sleep(self.sleep_time)
+            time.sleep(self.options.sleep_time)
             return self._api_caller(request=request, depth=depth)
 
         raise RequestFailureError(
@@ -123,4 +134,4 @@ class AbstractCommand(BaseModel):
             The response as a dictionary.
         """
 
-        return self._api_caller(request=request, depth=self.retry_count)
+        return self._api_caller(request=request, depth=self.options.retry_count)
