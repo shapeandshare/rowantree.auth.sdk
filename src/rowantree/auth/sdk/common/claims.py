@@ -63,4 +63,4 @@ def get_issuer() -> str:
         The issuer for the domain.
     """
 
-    return f"https://{demand_env_var(name='ROWANTREE_TLD')}/auth"
+    return f"https://api.{demand_env_var(name='ROWANTREE_TLD')}/auth"
