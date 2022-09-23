@@ -8,4 +8,5 @@ class RequestVerb(str, Enum):
 
     GET = "GET"
     POST = "POST"
+    FORM = "FORM"
     DELETE = "DELETE"

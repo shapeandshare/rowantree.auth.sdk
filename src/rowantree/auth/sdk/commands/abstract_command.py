@@ -60,6 +60,10 @@ class AbstractCommand(BaseModel):
         }
         if request.verb == RequestVerb.POST:
             params["data"] = request.data
+        if request.verb == RequestVerb.FORM:
+            params["files"] = {}
+            for key in request.data.keys():
+                params["files"][key] = (None, request.data[key])
         if request.params is not None:
             params["params"] = request.params
         return params
@@ -94,6 +98,8 @@ class AbstractCommand(BaseModel):
                 response: Response = requests.post(**params)
             elif request.verb == RequestVerb.DELETE:
                 response: Response = requests.delete(**params)
+            elif request.verb == RequestVerb.FORM:
+                response: Response = requests.post(**params)
             else:
                 raise Exception("Unknown Verb")
         except requests.exceptions.ConnectionError as error:
