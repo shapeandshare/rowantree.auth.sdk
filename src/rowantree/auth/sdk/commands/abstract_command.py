@@ -23,13 +23,11 @@ class AbstractCommand(BaseModel):
     Abstract Command
     """
 
-    options: CommandOptions
+    options: Optional[CommandOptions]
 
-    def __init__(self, options: Optional[CommandOptions], *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if options:
-            self.options = options
-        else:
+        if self.options is None:
             self.options = CommandOptions(
                 sleep_time=demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_SLEEP_TIME"),
                 retry_count=demand_env_var_as_int(name="ACCESS_AUTH_ENDPOINT_RETRY_COUNT"),
