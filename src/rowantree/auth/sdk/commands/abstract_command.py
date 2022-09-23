@@ -58,7 +58,7 @@ class AbstractCommand(BaseModel):
             "url": request.url,
             "timeout": self.options.timeout,
         }
-        if request.verb in [RequestVerb.POST]:
+        if request.verb == RequestVerb.POST:
             params["data"] = request.data
         if request.verb == RequestVerb.FORM:
             params["files"] = {}
