@@ -1,6 +1,6 @@
 """ Wrapped Request Definition """
 
-from typing import Any, Optional
+from typing import Optional
 
 from rowantree.contracts import BaseModel
 
@@ -29,5 +29,5 @@ class WrappedRequest(BaseModel):
     verb: RequestVerb
     statuses: RequestStatusCodes
     url: str
-    data: Optional[Any]  # str or dict ? - needs confirmation
+    data: Optional[dict]
     params: Optional[dict[str, str]]

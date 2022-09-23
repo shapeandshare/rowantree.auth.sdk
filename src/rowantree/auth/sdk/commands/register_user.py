@@ -30,7 +30,7 @@ class RegisterUserCommand(AbstractCommand):
         """
 
         request: WrappedRequest = WrappedRequest(
-            verb=RequestVerb.POST,
+            verb=RequestVerb.FORM,
             url=f"https://api.{self.options.tld}/auth/v1/register",
             statuses=RequestStatusCodes(allow=[status.HTTP_200_OK], reauth=[], retry=[]),
             data=request.dict(by_alias=True),
