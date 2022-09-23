@@ -25,8 +25,8 @@ class AbstractCommand(BaseModel):
 
     options: Optional[CommandOptions]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         if self.options is None:
             self.options = CommandOptions(
                 sleep_time=demand_env_var_as_float(name="ACCESS_AUTH_ENDPOINT_SLEEP_TIME"),
