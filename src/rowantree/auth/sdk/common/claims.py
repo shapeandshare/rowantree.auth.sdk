@@ -12,7 +12,7 @@ from rowantree.common.sdk import demand_env_var
 from ..contracts.dto.token_claims import TokenClaims
 
 
-def get_claims(token: str) -> TokenClaims:
+def get_claims(token: str, verify: bool = True) -> TokenClaims:
     """
     Gets claims from an OAuth2 token.
 
@@ -32,6 +32,9 @@ def get_claims(token: str) -> TokenClaims:
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
+    if not verify:
+        return TokenClaims.parse_obj(jwt.get_unverified_claims(token=token))
 
     try:
         issuer: str = get_issuer()
