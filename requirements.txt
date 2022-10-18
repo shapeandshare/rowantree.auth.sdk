@@ -6,6 +6,7 @@ starlette~=0.19
 python-jose~=3.3
 bcrypt~=4.0
 passlib~=1.7
-rowantree.common.sdk~=0.4
-rowantree.contracts~=0.16
-python-dotenv~=0.21.0
+python-dotenv~=0.21
+
+rowantree.common.sdk~=1.0
+rowantree.contracts~=1.0
