@@ -18,15 +18,15 @@ class TokenClaims(BaseModel):
     exp: datetime
         The expiry time of the token
     disabled: bool
-        Whether or not the user is disabled
+        Whether the user is disabled
     admin: bool
-        Whether or not the user is ad admin.
+        Whether the user is an admin.
     """
 
     sub: str
     iss: str
     exp: datetime
 
-    # TOO: move to scopes
+    # TODO: move to scopes
     disabled: bool
     admin: bool

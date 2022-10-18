@@ -44,7 +44,7 @@ def is_enabled(token_claims: TokenClaims = Depends(get_current_user)) -> TokenCl
     """
 
     if token_claims.disabled:
-        raise HTTPException(status_code=401, detail="Inactive user")
+        raise HTTPException(status_code=401, detail="Inactive User")
     return token_claims
 
 

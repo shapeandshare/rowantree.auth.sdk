@@ -14,13 +14,13 @@ class UserBase(BaseModel):
     username: str
         The username of the user.
     guid: str
-        The user guid.
+        The optional user guid.
     email: Union[str, None] = None
-        The user email address.
+        The optional user email address.
     disabled: Union[bool, None] = None
-        Whether the account is enabled or not.
+        Whether the account is enabled or not (optional).
     admin: Union[bool, None] = None
-        Whether the account is an admin or not.
+        Whether the account is an admin or not (optional).
     """
 
     username: str

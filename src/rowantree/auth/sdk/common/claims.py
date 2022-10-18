@@ -20,6 +20,8 @@ def get_claims(token: str, verify: bool = True) -> TokenClaims:
     ----------
     token: str
         Encoded token.
+    verify: bool
+        Whether to verify the jwt during decode.
 
     Returns
     -------
